@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from db import data_base, user2
+from schemas import UserRquestModel
 
 app = FastAPI()
 
@@ -22,9 +23,13 @@ def shut_down():
 async def index():
     return 'hola'
 
-@app.get('/about')
-async def about():
-    return 'chau'
+@app.post('/users')
+async def crear(user_request: UserRquestModel):
+    user = user2.create(
+        username = user_request.username,
+        email =  user_request.email
+    )
+    return user_request
 
 
     
