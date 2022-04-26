@@ -1,6 +1,7 @@
+from http.client import HTTPException
 from fastapi import FastAPI
 from db import data_base, user2
-from schemas import UserRquestModel
+from schemas import UserRquestModel, UserResponseModel
 
 app = FastAPI()
 
@@ -31,5 +32,24 @@ async def crear(user_request: UserRquestModel):
     )
     return user_request
 
+@app.get('/users/{user_id}')
+async def get_user(user_id):
+    user = user2.select().where(user2.id == user_id).first()
 
-    
+
+    if user:
+        return UserResponseModel(id = user.id, username = user.username, email = user.email)
+    else:
+        return HTTPException(404, "Usuario no encontrado")
+
+
+@app.delete('/users/{user_id}')
+async def delete_user(user_id):
+    user = user2.select().where(user2.id == user_id).first()
+
+
+    if user:
+        user.delete_instance()
+        return "Usuario eliminado"
+    else:
+        return HTTPException(404, "Usuario no encontrado")

@@ -1,3 +1,4 @@
+from enum import unique
 from peewee import *
 
 data_base = MySQLDatabase(
@@ -8,7 +9,7 @@ data_base = MySQLDatabase(
 )
 
 class user2(Model):
-    username = CharField(max_length=50)
+    username = CharField(max_length=50, unique = True)
     email = CharField(max_length=50)
 
     def __str__(self):
